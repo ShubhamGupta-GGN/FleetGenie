@@ -4,3 +4,4 @@ numpy
 scikit-learn
 plotly
 mlxtend
+streamlit-option-menu
