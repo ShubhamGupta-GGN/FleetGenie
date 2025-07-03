@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -121,8 +120,11 @@ with tab5:
     te=TransactionEncoder()
     ohe = te.fit(transactions).transform(transactions)
     df_trans = pd.DataFrame(ohe, columns=te.columns_)
-    sup = st.slider("Min Support", 0.01, 1.0, 0.1, 0.01)
+    sup = st.slider("Min Support", 0.01, 0.50, 0.05, 0.01)
     conf = st.slider("Min Confidence", 0.1, 1.0, 0.6, 0.05)
     freq = apriori(df_trans, min_support=sup, use_colnames=True)
-    rules = association_rules(freq, metric="confidence", min_threshold=conf).sort_values("confidence", ascending=False).head(10)
-    st.dataframe(rules[["antecedents","consequents","support","confidence","lift"]])
+    if freq.empty:
+        st.warning("No frequent item-sets at this support level. Lower the min-support.")
+    else:
+        rules = association_rules(freq, metric="confidence", min_threshold=conf).sort_values("confidence", ascending=False).head(10)
+        st.dataframe(rules[["antecedents","consequents","support","confidence","lift"]])
