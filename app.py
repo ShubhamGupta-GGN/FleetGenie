@@ -1,5 +1,8 @@
 
-import streamlit as st, pandas as pd, plotly.express as px, numpy as np
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
