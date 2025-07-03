@@ -27,7 +27,7 @@ st.set_page_config(page_title="FleetGenie Dashboard", layout="wide")
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("data/synthetic_fleet_survey_advanced.csv")
+    return pd.read_csv("synthetic_fleet_survey_advanced.csv")
 
 df = load_data()
 
