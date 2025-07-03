@@ -12,14 +12,12 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.cluster import KMeans
 from mlxtend.frequent_patterns import apriori, association_rules
 from mlxtend.preprocessing import TransactionEncoder
-import base64
 
 st.set_page_config(page_title="FleetGenie Dashboard", layout="wide", page_icon="🚚")
 
-# --------- CSS: Card style, Font, Colors ----------
+# CSS: Card style, Font, Colors
 st.markdown("""
 <style>
-/* Hero header and card styling */
 .block-container { padding-top: 0.5rem; }
 .card { background: #fff; padding: 1.1rem 1.5rem; border-radius: 1.1rem; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 28px }
 h1, h2, h3 { color: #004b6b !important; }
@@ -29,36 +27,30 @@ hr { margin-top: .3rem; margin-bottom: 1.1rem; }
 </style>
 """, unsafe_allow_html=True)
 
-# --------- Header & Logo ----------
-def logo_base64():
-    with open("fleetgenie_logo.png","rb") as img:
-        return base64.b64encode(img.read()).decode()
+# Header (no logo)
 st.markdown(
-    f"""
+    """
     <div style="display:flex;align-items:center;gap:1rem">
-        <img src='data:image/png;base64,{logo_base64()}' width='75'/>
         <h1 style="margin-bottom:0;">FleetGenie Dashboard</h1>
     </div><hr style='margin-top:4px;margin-bottom:20px'>
     """,
     unsafe_allow_html=True
 )
 
-# --------- Data ---------
 @st.cache_data
 def load_data():
     return pd.read_csv("synthetic_fleet_survey_advanced.csv")
 df = load_data()
 
-# --------- Sidebar Filters in Expander ---------
+# Sidebar Filters in Expander
 with st.sidebar:
-    st.image("fleetgenie_logo.png", width=120)
     with st.expander("Filters", expanded=True):
         size_sel = st.multiselect("Company Size", df["Company_Size"].unique(), df["Company_Size"].unique())
         strat_sel = st.multiselect("Maintenance Strategy", df["Maint_Strategy"].unique(), df["Maint_Strategy"].unique())
         ev_min = st.slider("Min EV %", 0, 100, 0)
     df = df[df["Company_Size"].isin(size_sel) & df["Maint_Strategy"].isin(strat_sel) & (df["EVs_%"]>=ev_min)]
 
-# --------- Option Menu Navigation ---------
+# Option Menu Navigation
 selected = option_menu(
     menu_title=None,
     options=["Visualisation","Classification","Clustering","Association"],
@@ -72,7 +64,7 @@ selected = option_menu(
     }
 )
 
-# --------- TAB 1: Visualisation ---------
+# TAB 1: Visualisation
 if selected=="Visualisation":
     st.markdown("<div class='card'>", unsafe_allow_html=True)
     col1,col2,col3 = st.columns(3)
@@ -96,7 +88,7 @@ if selected=="Visualisation":
     st.plotly_chart(px.histogram(df, x="Breakdowns_Year", color="Company_Size", template="plotly_white"), use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --------- TAB 2: Classification ---------
+# TAB 2: Classification
 elif selected=="Classification":
     st.markdown("<div class='card'>", unsafe_allow_html=True)
     st.markdown("## Classify AI Adoption")
@@ -136,7 +128,7 @@ elif selected=="Classification":
     st.plotly_chart(fig,use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --------- TAB 3: Clustering ---------
+# TAB 3: Clustering
 elif selected=="Clustering":
     st.markdown("<div class='card'>", unsafe_allow_html=True)
     st.markdown("## K‑Means Clustering")
@@ -148,7 +140,7 @@ elif selected=="Clustering":
     st.write("Centers:", kmeans.cluster_centers_)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --------- TAB 4: Association ---------
+# TAB 4: Association
 elif selected=="Association":
     st.markdown("<div class='card'>", unsafe_allow_html=True)
     st.markdown("## Association Rules: Key Benefits")
